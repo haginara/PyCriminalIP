@@ -6,6 +6,7 @@ from typing import Dict, List, Any, Optional, Tuple
 
 logger = logging.getLogger('criminalip')
 
+
 class CIPException(Exception):
     pass
 
@@ -15,6 +16,7 @@ class CIPLimitExcceed(Exception):
 
 
 class Client(object):
+    """CriminalIP Base client class"""
     api_url = "https://api.criminalip.io/v1/"
 
     def __init__(self, api_key: str):
