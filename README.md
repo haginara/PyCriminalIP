@@ -1,4 +1,4 @@
-# CriminalIP library forPyhton(unofficial)
+# CriminalIP library for Pyhton(unofficial)
 
 ## Installation
 - Install from git
