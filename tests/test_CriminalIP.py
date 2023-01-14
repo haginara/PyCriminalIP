@@ -10,6 +10,16 @@ from criminalip.CriminalIP import Exploit
 
 from criminalip.CriminalIP import CIPLimitExcceed
 
+
+''' CONSTANTS '''
+
+
+is_overall_limit_excceeded = False
+
+
+''' TEST Cases '''
+
+
 def test_client():
     client = Client(os.getenv("API_KEY"))
     assert "name" in client.get_user()
