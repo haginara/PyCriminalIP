@@ -13,15 +13,15 @@ jobs:
         with:
           python-version: "3.11"
           cache: 'pipenv'
-        - name: Install pipenv
-          run: |
-            python -m pip install --upgrade pipenv wheel
-        - name: Install dependencies
-          run: |
-            pipenv install --deploy --dev
-        
-        - name: Run test suite
-          run: |
-            pipenv run pytest
-          env:
-            API_KEY: ${{ secrets.API_KEY }}
+      - name: Install pipenv
+        run: |
+          python -m pip install --upgrade pipenv wheel
+      - name: Install dependencies
+        run: |
+          pipenv install --deploy --dev
+      
+      - name: Run test suite
+        run: |
+          pipenv run pytest
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
