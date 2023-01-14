@@ -10,6 +10,10 @@ class CIPException(Exception):
     pass
 
 
+class CIPLimitExcceed(Exception):
+    pass
+
+
 class Client(object):
     api_url = "https://api.criminalip.io/v1/"
 
@@ -33,12 +37,14 @@ class Client(object):
         logger.debug(f"Response: {response.status_code}")
         if not response.ok:
             raise CIPException(
-                f"Failed to request, error: {response.text}, method: {method}, uri: {uri}"
+                f"Failed to request, error: {response.text}, method: {method}, url: {url}"
             )
         data = response.json()
-        if data['status'] != 200:
+        if data['status'] == 403:
+            raise CIPLimitExcceed(data['message'])
+        elif data['status'] != 200:
             raise CIPException(
-                f"Failed to request, API status: {data['status']}, method: {method}, uri: {uri}"
+                f"Failed to request, API status: {data['status']}, {data}, url: {url}"
             )
         return response.json()
 
@@ -199,13 +205,14 @@ class Domain(Client):
         data = {
             "query": query,
         }
-        result = self.request("GET", "domain/scan", data=data)
-        return result
+        result = self.request("POST", "domain/scan", data=data)
+        scan_id = result['data']['scan_id']
+        return scan_id
 
     def reports(self, query: str, offset: int = 0) -> Dict[str, Any]:
         """Get existing domain reports
         Args:
-            query (str): Domain saerch query
+            query (str): Domain search query
             offset (int): starting position in the dataset [default: 0]
         Returns:
             reports (List[Dict]): list of Reports
@@ -219,7 +226,7 @@ class Domain(Client):
         reports = result["data"]["reports"]
         return reports
 
-    def report(self, scan_id: str) -> Dict[str, Any]:
+    def report(self, scan_id: int) -> Dict[str, Any]:
         """Get Domain scan result
 
         Args:

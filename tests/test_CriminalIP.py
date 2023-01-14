@@ -1,4 +1,5 @@
 import os
+import time
 import unittest
 
 from criminalip.CriminalIP import Client
@@ -7,6 +8,7 @@ from criminalip.CriminalIP import Banner
 from criminalip.CriminalIP import Domain
 from criminalip.CriminalIP import Exploit
 
+from criminalip.CriminalIP import CIPLimitExcceed
 
 def test_client():
     client = Client(os.getenv("API_KEY"))
@@ -77,7 +79,36 @@ class TestDomain(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.client = Domain(os.getenv("API_KEY"))
-    
+        
     def test_reports(self):
-        reports = self.client.reports('google.com')
+        try:
+            reports = self.client.reports('google.com')    
+        except CIPLimitExcceed:
+            self.skipTest('Domain API limit has been exceeded')
         self.assertTrue('countries' in reports[0])
+
+    def test_scan(self):
+        is_limit_exceeded = False
+        with self.subTest(command='scan'):
+            try:
+                scan_id = self.client.scan('aispera.com')
+            except CIPLimitExcceed:
+                is_limit_exceeded = True
+                self.skipTest('Domain API limit has been exceeded.')
+            self.assertTrue(scan_id and isinstance(scan_id, int))
+        
+        with self.subTest(command='status'):
+            if is_limit_exceeded: self.skipTest('Domain API limit has been exceeded.')
+            retry = 0
+            while retry < 10:
+                status = self.client.status(scan_id)
+                if status == 100:
+                    break
+                time.sleep(2)
+                retry += 1
+            self.assertTrue(retry < 10 and status == 100, msg=f"Retry: {retry}, status: {status}")
+        
+        with self.subTest(command='report'):
+            if is_limit_exceeded: self.skipTest('Domain API limit has been exceeded.')
+            report = self.client.report(scan_id)
+            self.assertTrue('certificates' in report)    
