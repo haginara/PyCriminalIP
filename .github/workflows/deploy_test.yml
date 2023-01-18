@@ -2,7 +2,10 @@ name: Deploy to test.pypi
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+    paths:
+      - "setup.py"
 
 jobs:
   build:
