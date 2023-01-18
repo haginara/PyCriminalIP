@@ -21,7 +21,7 @@ jobs:
         pipenv install --deploy --dev
     - name: Build
       run: |
-        pipenv runr python setup.py sdist bdist_wheel
+        pipenv run python setup.py sdist bdist_wheel
     - name: Publish to Test PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
