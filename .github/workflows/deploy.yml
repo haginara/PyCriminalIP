@@ -1,0 +1,30 @@
+name: Deploy to pypi
+
+on:
+  create:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+        cache: 'pipenv'
+    - name: Install pipenv
+      run: |
+        python -m pip install --upgrade pipenv
+        pipenv install --deploy --dev
+    - name: Build
+      run: |
+        pipenv run python setup.py sdist bdist_wheel
+    - name: Publish to Test PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_PASSWORD }}
