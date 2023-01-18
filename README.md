@@ -8,7 +8,7 @@ cd PyCriminalIP
 python setup.py install
 ```
 
-- Install from pypi (Not yet supported)
+- Install from pypi
 ```
 pip install pycriminalip
 ```
