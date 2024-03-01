@@ -17,7 +17,6 @@ class User:
 
     @classmethod
     def map_model(cls, data):
-        print(f"{data=}")
         return cls(**data["data"])
 
 
