@@ -1,5 +1,7 @@
 # CriminalIP library for Pyhton(unofficial)
 
+Integrated with CriminalIP API with Python.
+
 ## Installation
 - Install from git
 ```
