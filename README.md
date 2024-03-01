@@ -18,15 +18,11 @@ pip install pycriminalip
 
 ### Import classes and create an objects
 ```
-from typing import Dict
-
-from criminalip.CriminalIP import IP
-from criminalip.CriminalIP import Banner
-from criminalip.CriminalIP import Domain
-from criminalip.CriminalIP import Exploit
+import typing
+from criminalip import CriminalIP
 
 ip = IP('api_key_from_criminalip_io')
-ip_data: Dict[str, Any] = ip.data('aispera.com')
+ip_data: dict[str, typing.Any] = ip.data('aispera.com')
 print(ip_data)
 ```
 
