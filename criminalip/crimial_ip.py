@@ -1,8 +1,12 @@
 import logging
 from dataclasses import dataclass
 
-from .api import ApiClient, RequestRoute
-from .api import Response
+from .api import (
+    ApiClient,
+    RequestRoute,
+    Response,
+    response
+)
 
 
 @dataclass
@@ -151,7 +155,8 @@ class CriminalIP(ApiClient):
         # return result["data"]
         return params, None, None
 
-    @RequestRoute("POST", "v1/domain/scan/<scan_type>")
+    @response(func=lambda d: d["data"].get("scan_id"))
+    @RequestRoute("POST", "v1/domain/scan/")
     def domain_scan(self, query: str):
         """Request domain to scan
         Args:
@@ -163,7 +168,7 @@ class CriminalIP(ApiClient):
             "query": query,
         }
         # scan_id = result["data"]["scan_id"]
-        return None, data, None
+        return self.return_params(data=data)
 
     @RequestRoute("POST", "v1/domain/scan/private")
     def domain_private_scan(self, query: str):
